@@ -1,0 +1,114 @@
+:root {
+  --forest: #1F3327;
+  --forest-light: #2E4A38;
+  --amber: #C98A3A;
+  --amber-light: #E0AC63;
+  --clay: #A6552E;
+  --ivory: #F4EFE1;
+  --cream-card: #FFFDF8;
+  --ink: #241D14;
+  --muted: #6E6455;
+  --border: #E4DCC6;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Work Sans", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--forest);
+  margin: 0 0 0.4em 0;
+  font-weight: 600;
+}
+
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:focus-visible { outline: 2px solid var(--forest); outline-offset: 2px; }
+
+.btn-primary { background: var(--forest); color: var(--ivory); }
+.btn-primary:hover { box-shadow: 0 6px 16px rgba(31,51,39,0.25); }
+
+.btn-amber { background: var(--amber); color: var(--forest); }
+.btn-amber:hover { box-shadow: 0 6px 16px rgba(201,138,58,0.35); }
+
+.btn-outline { background: transparent; color: var(--forest); border: 1.5px solid var(--forest); }
+
+.card {
+  background: var(--cream-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.form-field label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+.form-field input,
+.form-field textarea,
+.form-field select {
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.form-field input:focus,
+.form-field textarea:focus,
+.form-field select:focus {
+  outline: 2px solid var(--amber);
+  outline-offset: 1px;
+}
+
+.error-text { color: var(--clay); font-size: 0.85rem; margin-top: -8px; margin-bottom: 12px; }
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  color: var(--clay);
+  font-weight: 600;
+}
+
+::selection { background: var(--amber-light); }
