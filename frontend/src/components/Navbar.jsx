@@ -1,53 +1,233 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useCart } from "../context/CartContext.jsx";
+import { useState } from "react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const { items } = useCart();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const cartCount = items.reduce((n, i) => n + i.quantity, 0);
 
+  const isActive = (path) => location.pathname === path;
+
+  const handleLogout = () => {
+    logout();
+    setMobileOpen(false);
+    navigate("/login");
+  };
+
   return (
-    <header style={{ borderBottom: "1px solid var(--border)", background: "var(--cream-card)" }}>
-      <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 24px" }}>
-        <Link to="/" style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", fontWeight: 700, color: "var(--forest)" }}>
-          Brave <span style={{ color: "var(--amber)" }}>Hair Oil</span>
+    <header className="bh-navbar">
+      <div className="bh-navbar-inner">
+
+        {/* Brand */}
+        <Link to="/" className="bh-brand" onClick={() => setMobileOpen(false)}>
+          <div className="bh-brand-icon">🌿</div>
+
+          <div className="bh-brand-text">
+            <span className="bh-brand-main">Brave</span>
+            <span className="bh-brand-sub">Hair Oil</span>
+          </div>
         </Link>
 
+        {/* Desktop Navigation */}
         {user ? (
-          <nav style={{ display: "flex", alignItems: "center", gap: 20, fontSize: "0.92rem", fontWeight: 500 }}>
-            <Link to="/">Shop</Link>
-            <Link to="/delivery">Delivery & Orders</Link>
-            <Link to="/history">My Orders</Link>
-            <Link to="/spin">🎡 Spin & Win</Link>
+          <nav className="bh-desktop-nav">
+
+            <Link
+              to="/"
+              className={`bh-nav-link ${isActive("/") ? "active" : ""}`}
+            >
+              Shop
+            </Link>
+
+            <Link
+              to="/delivery"
+              className={`bh-nav-link ${
+                isActive("/delivery") ? "active" : ""
+              }`}
+            >
+              Delivery & Orders
+            </Link>
+
+            <Link
+              to="/history"
+              className={`bh-nav-link ${
+                isActive("/history") ? "active" : ""
+              }`}
+            >
+              My Orders
+            </Link>
+
+            <Link
+              to="/spin"
+              className={`bh-nav-link ${
+                isActive("/spin") ? "active" : ""
+              }`}
+            >
+              <span className="bh-spin-icon">🎡</span>
+              Spin & Win
+            </Link>
+
             {user.isAdmin && (
-              <Link to="/admin" style={{ color: "var(--clay)", fontWeight: 700 }}>Admin</Link>
+              <Link
+                to="/admin"
+                className={`bh-nav-link bh-admin ${
+                  isActive("/admin") ? "active" : ""
+                }`}
+              >
+                Admin
+              </Link>
             )}
-            <Link to="/cart" style={{ position: "relative" }}>
-              Cart{cartCount > 0 && (
-                <span style={{
-                  position: "absolute", top: -10, right: -16, background: "var(--clay)",
-                  color: "#fff", borderRadius: "50%", fontSize: "0.7rem", width: 18, height: 18,
-                  display: "flex", alignItems: "center", justifyContent: "center"
-                }}>{cartCount}</span>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className={`bh-cart ${
+                isActive("/cart") ? "active" : ""
+              }`}
+              aria-label="Shopping cart"
+            >
+              <span className="bh-cart-icon">🛒</span>
+              <span>Cart</span>
+
+              {cartCount > 0 && (
+                <span className="bh-cart-badge">
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
               )}
             </Link>
+
+            {/* Logout */}
             <button
-              className="btn btn-outline"
-              style={{ padding: "8px 16px" }}
-              onClick={() => { logout(); navigate("/login"); }}
+              className="bh-logout"
+              onClick={handleLogout}
             >
+              <span>↪</span>
               Log out
             </button>
           </nav>
         ) : (
-          <nav style={{ display: "flex", gap: 12 }}>
-            <Link to="/login" className="btn btn-outline">Log in</Link>
-            <Link to="/signup" className="btn btn-primary">Sign up</Link>
+          <nav className="bh-auth-nav">
+            <Link to="/login" className="bh-login-btn">
+              Log in
+            </Link>
+
+            <Link to="/signup" className="bh-signup-btn">
+              Sign up
+              <span>→</span>
+            </Link>
           </nav>
         )}
+
+        {/* Mobile Menu Button */}
+        <button
+          className="bh-mobile-toggle"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Toggle navigation"
+          aria-expanded={mobileOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
+
+      {/* Mobile Navigation */}
+      {mobileOpen && (
+        <div className="bh-mobile-menu">
+
+          {user ? (
+            <>
+              <Link
+                to="/"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                🌿 Shop
+              </Link>
+
+              <Link
+                to="/delivery"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                📦 Delivery & Orders
+              </Link>
+
+              <Link
+                to="/history"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                📋 My Orders
+              </Link>
+
+              <Link
+                to="/spin"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                🎡 Spin & Win
+              </Link>
+
+              {user.isAdmin && (
+                <Link
+                  to="/admin"
+                  className="bh-mobile-link bh-admin"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  ⚙️ Admin
+                </Link>
+              )}
+
+              <Link
+                to="/cart"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                🛒 Cart
+
+                {cartCount > 0 && (
+                  <span className="bh-mobile-cart-count">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                className="bh-mobile-logout"
+                onClick={handleLogout}
+              >
+                ↪ Log out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="bh-mobile-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                Log in
+              </Link>
+
+              <Link
+                to="/signup"
+                className="bh-mobile-signup"
+                onClick={() => setMobileOpen(false)}
+              >
+                Sign up →
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   );
 }
